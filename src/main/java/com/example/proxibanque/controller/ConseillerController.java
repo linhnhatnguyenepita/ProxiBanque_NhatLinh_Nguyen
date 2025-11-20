@@ -1,5 +1,8 @@
 package com.example.proxibanque.controller;
 
+import com.example.proxibanque.dto.ClientSummaryDTO;
+import com.example.proxibanque.dto.ConseillerResponseDTO;
+import com.example.proxibanque.dto.DTOMapper;
 import com.example.proxibanque.entity.Client;
 import com.example.proxibanque.entity.Conseiller;
 import com.example.proxibanque.service.ConseillerService;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,8 +21,10 @@ public class ConseillerController {
     private final ConseillerService conseillerService;
 
     @GetMapping("conseillers")
-    List<Conseiller> getConseillers(){
-        return conseillerService.getConseillers();
+    List<ConseillerResponseDTO> getConseillers(){
+        return conseillerService.getConseillers().stream()
+                .map(DTOMapper::toConseillerResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("conseillers")
@@ -27,8 +33,11 @@ public class ConseillerController {
     }
 
     @GetMapping("conseillers/{id}")
-    ResponseEntity<Conseiller> getConseiller(@PathVariable Long id){
-        return conseillerService.getConseillerById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    ResponseEntity<ConseillerResponseDTO> getConseiller(@PathVariable Long id){
+        return conseillerService.getConseillerById(id)
+                .map(DTOMapper::toConseillerResponseDTO)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("conseillers")
@@ -41,9 +50,13 @@ public class ConseillerController {
     }
 
     @GetMapping("conseillers/{id}/clients")
-    ResponseEntity<Set<Client>> getConseillerWithAllClient(@PathVariable Long id){
+    ResponseEntity<List<ClientSummaryDTO>> getConseillerWithAllClient(@PathVariable Long id){
         return conseillerService.getConseillerById(id)
-                .map(conseiller -> ResponseEntity.ok(conseiller.getClients()))
+                .map(conseiller -> ResponseEntity.ok(
+                    conseiller.getClients().stream()
+                        .map(DTOMapper::toClientSummaryDTO)
+                        .collect(Collectors.toList())
+                ))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

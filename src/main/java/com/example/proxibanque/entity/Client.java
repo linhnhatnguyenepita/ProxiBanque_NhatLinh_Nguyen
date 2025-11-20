@@ -1,6 +1,5 @@
 package com.example.proxibanque.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,7 +32,6 @@ public class Client {
 
     @ManyToOne
     @JoinColumn(name = "conseiller_id")
-    @JsonIgnoreProperties("clients")
     private Conseiller conseiller;
 
     public Client(String firstName, String lastName, String address, int codePostal, String city, String phoneNumber) {

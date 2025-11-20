@@ -1,6 +1,5 @@
 package com.example.proxibanque.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,8 +20,7 @@ public class Conseiller {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "conseiller", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("conseiller")
+    @OneToMany(mappedBy = "conseiller", cascade = CascadeType.ALL)
     private Set<Client> clients = new HashSet<>();
 
     public void addClient(Client client) {
