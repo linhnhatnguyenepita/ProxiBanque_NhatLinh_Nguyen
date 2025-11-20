@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -17,9 +18,15 @@ public class CompteEpargne{
     @GeneratedValue
     private Long accountNumber;
     private Long balance;
-    private Date openingDate;
+    private LocalDate openingDate;
 
-    public void addBalance(Long balance) {}
+    public CompteEpargne(Long accountNumber, Long balance) {
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+        this.openingDate = LocalDate.now();
+    }
 
-    public CompteEpargne(String firstName, String lastName) {}
+    public void addBalance(Long balance) {
+        this.balance += balance;
+    }
 }

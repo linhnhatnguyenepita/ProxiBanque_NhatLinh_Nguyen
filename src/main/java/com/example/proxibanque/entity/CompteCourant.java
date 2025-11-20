@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,8 +21,22 @@ public class CompteCourant{
     @GeneratedValue
     private Long accountNumber;
     private Long balance;
-    private Date openingDate;
+    private LocalDate openingDate;
+    private Long DECOUVERTE = 1000L;
 
-    public void addBalance(Long balance) {}
-    public CompteCourant(String firstName, String lastName) {}
+    public CompteCourant(Long accountNumber, Long balance) {
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+        this.openingDate = LocalDate.now();
+    }
+
+    public void reduceBalance(Long amount) {
+        if (balance - amount >= -DECOUVERTE) {
+            this.balance -= amount;
+        }
+    }
+
+    public void addBalance(Long balance) {
+        this.balance += balance;
+    }
 }
